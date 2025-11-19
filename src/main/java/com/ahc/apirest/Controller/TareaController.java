@@ -1,7 +1,6 @@
 package com.ahc.apirest.Controller;
 
 import com.ahc.apirest.dto.TareaDTO;
-import com.ahc.apirest.entity.Tarea;
 import com.ahc.apirest.service.TareaServices;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tarea")
+@RequestMapping("/tareas")
 @AllArgsConstructor
 
 public class TareaController {
@@ -58,6 +57,37 @@ public class TareaController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
+    @PatchMapping("/{id}/completar")
+    public ResponseEntity<Void> completar(@PathVariable Long id) {
+        if (tareaServices.marcadoCompletado(id)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
+    @PatchMapping("/{id}/pendiente")
+    public ResponseEntity<Void> pendiente(@PathVariable Long id) {
+        if (tareaServices.marcadoPendiente(id)){
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
+    @GetMapping("/completadas")
+    public ResponseEntity<List<TareaDTO>> listaCompletado() {
+        List<TareaDTO> lista = tareaServices.listadoTareaCompleta();
+        return ResponseEntity.ok(lista);
+    }
+    @GetMapping("/pendiente")
+    public ResponseEntity<List<TareaDTO>> listaPendiente() {
+        List<TareaDTO> lista = tareaServices.listadoTareaPendiente();
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<TareaDTO>> buscarPorNombre(@RequestParam String nombre) {
+        List<TareaDTO> lista = tareaServices.buscarPorNombre(nombre);
+        return ResponseEntity.ok(lista);
+    }
 
 }

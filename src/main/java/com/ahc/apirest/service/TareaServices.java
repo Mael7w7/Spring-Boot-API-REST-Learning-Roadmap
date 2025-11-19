@@ -4,6 +4,8 @@ import com.ahc.apirest.dto.TareaDTO;
 import com.ahc.apirest.entity.Tarea;
 import com.ahc.apirest.repository.TareaRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Getter @Setter
 
 public class TareaServices implements ITareaServices{
     //inyeccion de dependencia
@@ -92,4 +95,70 @@ public class TareaServices implements ITareaServices{
                     }
             ).orElse(false);
     }
+    @Override
+    public boolean marcadoCompletado(Long id) {
+        Optional<Tarea> tarea = repository.findById(id);
+        if(tarea.isPresent()){
+            Tarea tarea1 = tarea.get();
+            tarea1.setCompletado(true);
+            repository.save(tarea1);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean marcadoPendiente(Long id) {
+        Optional<Tarea> tarea = repository.findById(id);
+
+        if(tarea.isPresent()){
+            Tarea tarea1 = tarea.get();
+            tarea1.setCompletado(false);
+            repository.save(tarea1);
+            return true;
+        }
+        return false;
+    }
+
+    public List<TareaDTO> listadoTareaCompleta() {
+
+        return repository.findByCompletadoTrue().stream()
+                .map(
+                        r-> TareaDTO.builder()
+                                .nombre(r.getNombre())
+                                .fecha(r.getFecha())
+                                .completado((r.isCompletado()))
+                                .descripcion((r.getDescripcion())).build()
+
+                ).collect(Collectors.toList());
+
+    }
+
+    public List<TareaDTO> listadoTareaPendiente() {
+        return repository.findByCompletadoFalse().stream()
+                .map(
+                        r-> TareaDTO.builder()
+                                .nombre(r.getNombre())
+                                .descripcion(r.getDescripcion())
+                                .fecha(r.getFecha())
+                                .completado(r.isCompletado())
+                                .build()
+                ).collect(Collectors.toList());
+
+    }
+    public List<TareaDTO> buscarPorNombre(String nombre) {
+        return repository.findByNombreContainingIgnoreCase(nombre)
+                .stream()
+                .map(
+                        r->TareaDTO.builder()
+                                .nombre(r.getNombre())
+                                .descripcion(r.getDescripcion())
+                                .fecha(r.getFecha())
+                                .completado(r.isCompletado())
+                                .build()
+                ).collect(Collectors.toList());
+
+
+    }
+
 }
