@@ -2,7 +2,11 @@ package com.ahc.apirest.dto.orden;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder
 public class ItemOrdenRequest {
 
     @NotNull(message = "El productoId es obligatorio")
@@ -10,5 +14,6 @@ public class ItemOrdenRequest {
 
     @Min(value = 1, message = "La cantidad debe ser al menos 1")
     private Integer cantidad;
+
 
 }

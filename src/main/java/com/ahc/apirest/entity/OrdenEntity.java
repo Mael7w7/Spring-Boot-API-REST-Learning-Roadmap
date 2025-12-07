@@ -31,7 +31,7 @@ public class OrdenEntity {
     private ClienteEntity cliente;
 
     @OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    @JoinColumn(name = "items_id")
+    @JoinColumn(name = "orden_id")
     private List<OrdenItemEntity> items;
 
 

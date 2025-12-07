@@ -20,9 +20,11 @@ public class OrdenItemEntity {
     private Long id;
     private Integer cantidad;
     private BigDecimal precioUnitario;
+    private BigDecimal subtotal;
 
     @ManyToOne
     @JoinColumn(name = "producto_id")
     private ProductoEntity producto;
+
 
 }
